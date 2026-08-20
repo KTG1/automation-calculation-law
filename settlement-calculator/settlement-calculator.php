@@ -3,14 +3,14 @@
  * Plugin Name: Settlement Calculator
  * Plugin URI:  https://github.com/KTG1/automation-calculation-law
  * Description: Creates a customizable settlement estimator page with tabbed FAQs.
- * Version:     1.2.0
+ * Version:     1.3.0
  * Author:      KTG1
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: settlement-calculator
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
-define( 'SC_VERSION', '1.2.0' );
+define( 'SC_VERSION', '1.3.0' );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 function sc_default_settings() {
@@ -33,6 +33,7 @@ function sc_default_settings() {
 		'example_kicker' => 'Worked example', 'example_title' => 'See how the layers change take-home value.', 'example_intro' => 'This simplified illustration shows why a headline settlement and the amount a claimant receives are not the same.',
 		'example_gross_label' => 'Working claim value', 'example_gross_value' => '$75,000', 'example_reduction_label' => 'Fault, fees, costs & liens', 'example_reduction_value' => '−$31,250', 'example_net_label' => 'Illustrative take-home', 'example_net_value' => '$43,750',
 		'trust_title' => 'Your figures stay with you.', 'trust_text' => 'The calculator runs entirely in your browser. It does not submit, store, or transmit the numbers you enter.', 'trust_link_label' => 'Return to calculator',
+		'read_more_label' => 'Read more', 'consult_kicker' => 'A calculation is the starting point', 'consult_title' => 'Turn your estimate into a case conversation.', 'consult_text' => 'An attorney can review the evidence, coverage, deadlines, and local rules that a calculator cannot see.', 'consult_primary_label' => 'Request a consultation', 'consult_primary_url' => '#', 'consult_secondary_label' => 'Call our team', 'consult_secondary_url' => 'tel:+10000000000', 'consult_note' => 'No obligation. Your information stays confidential.',
 		'faqs' => array(
 			array( 'label' => 'Calculation basics', 'items' => array( array( 'question' => 'How is the estimated claim value calculated?', 'answer' => 'The calculator adds economic damages to an estimate for pain and suffering. The pain-and-suffering estimate applies your selected multiplier to past and future medical expenses.' ), array( 'question' => 'What does the likely range mean?', 'answer' => 'The range is 15% below and above the estimated take-home amount. It illustrates uncertainty and is not a prediction or guarantee.' ) ) ),
 			array( 'label' => 'Costs & fees', 'items' => array( array( 'question' => 'When is the attorney fee deducted?', 'answer' => 'The calculator applies the entered attorney fee percentage after reducing the gross estimate for your share of fault.' ), array( 'question' => 'What should I include as case costs?', 'answer' => 'Examples can include filing fees, medical records, depositions, investigators, and expert witnesses. Fee arrangements vary.' ) ) ),
@@ -73,9 +74,10 @@ add_shortcode( 'settlement_calculator', 'sc_render_calculator' );
 function sc_render_information_sections( $s ) {
 	?>
 	<section class="sc-method" id="sc-method" aria-labelledby="sc-method-title"><header><p class="sc-kicker"><?php echo esc_html( $s['method_kicker'] ); ?></p><h2 id="sc-method-title"><?php echo esc_html( $s['method_title'] ); ?></h2><p><?php echo esc_html( $s['method_intro'] ); ?></p></header><div class="sc-value-map"><?php for ( $i = 1; $i <= 3; $i++ ) : ?><article><span>0<?php echo esc_html( $i ); ?></span><h3><?php echo esc_html( $s[ 'method_' . $i . '_title' ] ); ?></h3><p><?php echo esc_html( $s[ 'method_' . $i . '_text' ] ); ?></p></article><?php endfor; ?></div></section>
-	<section class="sc-factors" id="sc-factors" aria-labelledby="sc-factors-title"><header><p class="sc-kicker"><?php echo esc_html( $s['factors_kicker'] ); ?></p><h2 id="sc-factors-title"><?php echo esc_html( $s['factors_title'] ); ?></h2><p><?php echo esc_html( $s['factors_intro'] ); ?></p></header><div class="sc-factor-grid"><?php for ( $i = 1; $i <= 4; $i++ ) : ?><article><span aria-hidden="true"></span><h3><?php echo esc_html( $s[ 'factor_' . $i . '_title' ] ); ?></h3><p><?php echo esc_html( $s[ 'factor_' . $i . '_text' ] ); ?></p></article><?php endfor; ?></div></section>
+	<section class="sc-factors" id="sc-factors" aria-labelledby="sc-factors-title"><header><p class="sc-kicker"><?php echo esc_html( $s['factors_kicker'] ); ?></p><h2 id="sc-factors-title"><?php echo esc_html( $s['factors_title'] ); ?></h2><p><?php echo esc_html( $s['factors_intro'] ); ?></p></header><div class="sc-factor-grid"><?php $icons = array( 'document', 'shield', 'timeline', 'balance' ); for ( $i = 1; $i <= 4; $i++ ) : ?><article><span class="sc-factor-icon sc-icon-<?php echo esc_attr( $icons[ $i - 1 ] ); ?>" aria-hidden="true"></span><h3><?php echo esc_html( $s[ 'factor_' . $i . '_title' ] ); ?></h3><p><?php echo esc_html( $s[ 'factor_' . $i . '_text' ] ); ?></p><a href="#sc-faq-title"><?php echo esc_html( $s['read_more_label'] ); ?> <span aria-hidden="true">→</span></a></article><?php endfor; ?></div></section>
 	<section class="sc-example" aria-labelledby="sc-example-title"><div><p class="sc-kicker"><?php echo esc_html( $s['example_kicker'] ); ?></p><h2 id="sc-example-title"><?php echo esc_html( $s['example_title'] ); ?></h2><p><?php echo esc_html( $s['example_intro'] ); ?></p></div><dl><div><dt><?php echo esc_html( $s['example_gross_label'] ); ?></dt><dd><?php echo esc_html( $s['example_gross_value'] ); ?></dd></div><div><dt><?php echo esc_html( $s['example_reduction_label'] ); ?></dt><dd><?php echo esc_html( $s['example_reduction_value'] ); ?></dd></div><div><dt><?php echo esc_html( $s['example_net_label'] ); ?></dt><dd><?php echo esc_html( $s['example_net_value'] ); ?></dd></div></dl></section>
 	<aside class="sc-trust"><span aria-hidden="true">✓</span><div><h2><?php echo esc_html( $s['trust_title'] ); ?></h2><p><?php echo esc_html( $s['trust_text'] ); ?></p></div><a href="#sc-calculator"><?php echo esc_html( $s['trust_link_label'] ); ?> <span aria-hidden="true">↑</span></a></aside>
+	<section class="sc-consult" aria-labelledby="sc-consult-title"><div class="sc-consult-icon" aria-hidden="true"><span></span></div><div><p class="sc-kicker"><?php echo esc_html( $s['consult_kicker'] ); ?></p><h2 id="sc-consult-title"><?php echo esc_html( $s['consult_title'] ); ?></h2><p><?php echo esc_html( $s['consult_text'] ); ?></p><small><?php echo esc_html( $s['consult_note'] ); ?></small></div><div class="sc-consult-actions"><a class="sc-button sc-button-primary" href="<?php echo esc_url( $s['consult_primary_url'] ); ?>"><?php echo esc_html( $s['consult_primary_label'] ); ?> <span aria-hidden="true">→</span></a><a class="sc-button sc-button-secondary" href="<?php echo esc_url( $s['consult_secondary_url'] ); ?>"><?php echo esc_html( $s['consult_secondary_label'] ); ?> <span aria-hidden="true">↗</span></a></div></section>
 	<?php
 }
 
@@ -107,6 +109,7 @@ function sc_render_settings_page() {
 		'Claim factors' => array( 'factors_kicker', 'factors_title', 'factors_intro', 'factor_1_title', 'factor_1_text', 'factor_2_title', 'factor_2_text', 'factor_3_title', 'factor_3_text', 'factor_4_title', 'factor_4_text' ),
 		'Worked example' => array( 'example_kicker', 'example_title', 'example_intro', 'example_gross_label', 'example_gross_value', 'example_reduction_label', 'example_reduction_value', 'example_net_label', 'example_net_value' ),
 		'Privacy callout' => array( 'trust_title', 'trust_text', 'trust_link_label' ),
+		'Consultation call to action' => array( 'consult_kicker', 'consult_title', 'consult_text', 'consult_primary_label', 'consult_primary_url', 'consult_secondary_label', 'consult_secondary_url', 'consult_note', 'read_more_label' ),
 		'FAQ introduction' => array( 'faq_kicker', 'faq_title', 'faq_intro' ),
 	);
 	?>
