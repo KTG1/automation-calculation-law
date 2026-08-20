@@ -3,23 +3,36 @@
  * Plugin Name: Settlement Calculator
  * Plugin URI:  https://github.com/KTG1/automation-calculation-law
  * Description: Creates a customizable settlement estimator page with tabbed FAQs.
- * Version:     1.1.0
+ * Version:     1.2.0
  * Author:      KTG1
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: settlement-calculator
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
-define( 'SC_VERSION', '1.1.0' );
+define( 'SC_VERSION', '1.2.0' );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 function sc_default_settings() {
 	return array(
+		'brand_name' => 'Claimline', 'brand_descriptor' => 'Settlement planning studio', 'nav_calculator' => 'Calculator', 'nav_method' => 'How it works', 'nav_factors' => 'Claim factors', 'nav_faq' => 'FAQ', 'hero_badge' => 'Private by design · No data saved',
 		'kicker' => 'Claim planning tool', 'title' => 'Estimate what your settlement could leave you.', 'intro' => 'Build a clear estimate from damages to potential take-home amount. Your entries stay in this browser.',
 		'economic_title' => 'Economic damages', 'medical_label' => 'Medical expenses', 'medical_help' => 'Past bills and treatment', 'future_medical_label' => 'Future medical costs', 'future_medical_help' => 'Expected care and rehabilitation', 'lost_income_label' => 'Lost income', 'lost_income_help' => 'Wages already missed', 'future_income_label' => 'Future lost earnings', 'future_income_help' => 'Reduced earning capacity', 'property_label' => 'Property damage', 'property_help' => 'Repair or replacement costs', 'other_label' => 'Other damages', 'other_help' => 'Travel and out-of-pocket costs',
 		'adjustments_title' => 'Claim adjustments', 'multiplier_label' => 'Pain & suffering multiplier', 'multiplier_help' => 'Applied to medical expenses; 1× is modest and 5× is severe.', 'fault_label' => 'Your share of fault', 'fee_label' => 'Attorney fee', 'case_costs_label' => 'Case costs', 'case_costs_help' => 'Filing, experts, records', 'liens_label' => 'Medical liens', 'liens_help' => 'Amounts repaid from settlement', 'clear_label' => 'Clear all', 'auto_update_text' => 'Values update automatically.',
 		'net_label' => 'Estimated take-home', 'economic_result_label' => 'Economic damages', 'non_economic_label' => 'Pain & suffering', 'gross_label' => 'Estimated claim value', 'fault_result_label' => 'Fault reduction', 'fee_result_label' => 'Attorney fee', 'deductions_label' => 'Costs & liens', 'disclaimer_title' => 'A planning estimate, not a promise.', 'disclaimer_text' => 'Laws, insurance limits, evidence, negotiations, taxes, and case-specific facts can materially change a settlement. This tool is not legal advice.',
 		'faq_kicker' => 'Common questions', 'faq_title' => 'Understand the estimate.', 'faq_intro' => 'Explore how the calculator works, what may affect a claim, and what the estimate leaves out.',
+		'method_kicker' => 'The value map', 'method_title' => 'From documented loss to a working estimate.', 'method_intro' => 'A settlement is not one number pulled from thin air. This calculator follows three connected layers so you can see where value enters—and where deductions leave.',
+		'method_1_title' => 'Document the loss', 'method_1_text' => 'Start with bills, missed income, damaged property, future care, and other costs you can support with records.',
+		'method_2_title' => 'Model human impact', 'method_2_text' => 'Use the multiplier to explore how injury severity, recovery time, and daily disruption may affect non-economic damages.',
+		'method_3_title' => 'Account for recovery', 'method_3_text' => 'Reduce the working value for comparative fault, legal fees, case expenses, and medical liens.',
+		'factors_kicker' => 'What moves a claim', 'factors_title' => 'The number is shaped by the story behind it.', 'factors_intro' => 'Two claims with similar bills can resolve very differently. These are common forces behind that difference.',
+		'factor_1_title' => 'Evidence quality', 'factor_1_text' => 'Medical records, wage documentation, photographs, witnesses, and consistent treatment can make losses easier to establish.',
+		'factor_2_title' => 'Coverage available', 'factor_2_text' => 'Policy limits and the defendant’s ability to pay may cap practical recovery regardless of calculated damages.',
+		'factor_3_title' => 'Recovery timeline', 'factor_3_text' => 'Longer treatment, permanent limitations, and future medical needs can change both economic and non-economic damages.',
+		'factor_4_title' => 'Disputed responsibility', 'factor_4_text' => 'Conflicting accounts, shared fault, and local comparative-negligence rules can materially reduce or bar recovery.',
+		'example_kicker' => 'Worked example', 'example_title' => 'See how the layers change take-home value.', 'example_intro' => 'This simplified illustration shows why a headline settlement and the amount a claimant receives are not the same.',
+		'example_gross_label' => 'Working claim value', 'example_gross_value' => '$75,000', 'example_reduction_label' => 'Fault, fees, costs & liens', 'example_reduction_value' => '−$31,250', 'example_net_label' => 'Illustrative take-home', 'example_net_value' => '$43,750',
+		'trust_title' => 'Your figures stay with you.', 'trust_text' => 'The calculator runs entirely in your browser. It does not submit, store, or transmit the numbers you enter.', 'trust_link_label' => 'Return to calculator',
 		'faqs' => array(
 			array( 'label' => 'Calculation basics', 'items' => array( array( 'question' => 'How is the estimated claim value calculated?', 'answer' => 'The calculator adds economic damages to an estimate for pain and suffering. The pain-and-suffering estimate applies your selected multiplier to past and future medical expenses.' ), array( 'question' => 'What does the likely range mean?', 'answer' => 'The range is 15% below and above the estimated take-home amount. It illustrates uncertainty and is not a prediction or guarantee.' ) ) ),
 			array( 'label' => 'Costs & fees', 'items' => array( array( 'question' => 'When is the attorney fee deducted?', 'answer' => 'The calculator applies the entered attorney fee percentage after reducing the gross estimate for your share of fault.' ), array( 'question' => 'What should I include as case costs?', 'answer' => 'Examples can include filing fees, medical records, depositions, investigators, and expert witnesses. Fee arrangements vary.' ) ) ),
@@ -41,9 +54,9 @@ function sc_enqueue_assets() { wp_enqueue_style( 'settlement-calculator', SC_PLU
 function sc_render_calculator() {
 	sc_enqueue_assets(); $s = sc_get_settings(); ob_start();
 	?>
-	<div class="sc-shell"><section aria-labelledby="sc-title">
-	<header class="sc-intro"><p class="sc-kicker"><?php echo esc_html( $s['kicker'] ); ?></p><h1 id="sc-title"><?php echo esc_html( $s['title'] ); ?></h1><p><?php echo esc_html( $s['intro'] ); ?></p></header>
-	<div class="sc-layout"><form class="sc-form" data-sc-form novalidate>
+	<div class="sc-shell"><nav class="sc-brandbar" aria-label="Calculator navigation"><a class="sc-brand" href="#sc-title"><span class="sc-brand-mark" aria-hidden="true">C</span><span><strong><?php echo esc_html( $s['brand_name'] ); ?></strong><small><?php echo esc_html( $s['brand_descriptor'] ); ?></small></span></a><div><a href="#sc-calculator"><?php echo esc_html( $s['nav_calculator'] ); ?></a><a href="#sc-method"><?php echo esc_html( $s['nav_method'] ); ?></a><a href="#sc-factors"><?php echo esc_html( $s['nav_factors'] ); ?></a><a href="#sc-faq-title"><?php echo esc_html( $s['nav_faq'] ); ?></a></div></nav><section aria-labelledby="sc-title">
+	<header class="sc-intro"><p class="sc-kicker"><?php echo esc_html( $s['kicker'] ); ?></p><h1 id="sc-title"><?php echo esc_html( $s['title'] ); ?></h1><p><?php echo esc_html( $s['intro'] ); ?></p><span class="sc-privacy-badge"><i aria-hidden="true"></i><?php echo esc_html( $s['hero_badge'] ); ?></span></header>
+	<div class="sc-layout" id="sc-calculator"><form class="sc-form" data-sc-form novalidate>
 	<fieldset class="sc-section"><legend><span>1</span><?php echo esc_html( $s['economic_title'] ); ?></legend><div class="sc-grid">
 	<?php sc_money_field( 'medical', $s['medical_label'], $s['medical_help'] ); sc_money_field( 'future-medical', $s['future_medical_label'], $s['future_medical_help'] ); sc_money_field( 'lost-income', $s['lost_income_label'], $s['lost_income_help'] ); sc_money_field( 'future-income', $s['future_income_label'], $s['future_income_help'] ); sc_money_field( 'property', $s['property_label'], $s['property_help'] ); sc_money_field( 'other', $s['other_label'], $s['other_help'] ); ?>
 	</div></fieldset>
@@ -52,10 +65,19 @@ function sc_render_calculator() {
 	<?php sc_percent_field( 'fault', $s['fault_label'], 0 ); sc_percent_field( 'fee', $s['fee_label'], 33.3 ); sc_money_field( 'case-costs', $s['case_costs_label'], $s['case_costs_help'] ); sc_money_field( 'liens', $s['liens_label'], $s['liens_help'] ); ?>
 	</div></fieldset><div class="sc-actions"><button class="sc-reset" type="reset"><?php echo esc_html( $s['clear_label'] ); ?></button><p><?php echo esc_html( $s['auto_update_text'] ); ?></p></div></form>
 	<aside class="sc-result" aria-labelledby="sc-result-title" aria-live="polite"><div class="sc-result-top"><p><?php echo esc_html( $s['net_label'] ); ?></p><h2 id="sc-result-title" data-sc-net>$0</h2><span data-sc-range>$0 – $0</span></div><dl class="sc-breakdown"><div><dt><?php echo esc_html( $s['economic_result_label'] ); ?></dt><dd data-sc-economic>$0</dd></div><div><dt><?php echo esc_html( $s['non_economic_label'] ); ?></dt><dd data-sc-non-economic>$0</dd></div><div><dt><?php echo esc_html( $s['gross_label'] ); ?></dt><dd data-sc-gross>$0</dd></div><div><dt><?php echo esc_html( $s['fault_result_label'] ); ?></dt><dd data-sc-fault>−$0</dd></div><div><dt><?php echo esc_html( $s['fee_result_label'] ); ?></dt><dd data-sc-fee>−$0</dd></div><div><dt><?php echo esc_html( $s['deductions_label'] ); ?></dt><dd data-sc-deductions>−$0</dd></div></dl><div class="sc-note"><strong><?php echo esc_html( $s['disclaimer_title'] ); ?></strong><p><?php echo esc_html( $s['disclaimer_text'] ); ?></p></div></aside></div></section>
-	<?php sc_render_faqs( $s ); ?></div>
+	<?php sc_render_information_sections( $s ); sc_render_faqs( $s ); ?></div>
 	<?php return (string) ob_get_clean();
 }
 add_shortcode( 'settlement_calculator', 'sc_render_calculator' );
+
+function sc_render_information_sections( $s ) {
+	?>
+	<section class="sc-method" id="sc-method" aria-labelledby="sc-method-title"><header><p class="sc-kicker"><?php echo esc_html( $s['method_kicker'] ); ?></p><h2 id="sc-method-title"><?php echo esc_html( $s['method_title'] ); ?></h2><p><?php echo esc_html( $s['method_intro'] ); ?></p></header><div class="sc-value-map"><?php for ( $i = 1; $i <= 3; $i++ ) : ?><article><span>0<?php echo esc_html( $i ); ?></span><h3><?php echo esc_html( $s[ 'method_' . $i . '_title' ] ); ?></h3><p><?php echo esc_html( $s[ 'method_' . $i . '_text' ] ); ?></p></article><?php endfor; ?></div></section>
+	<section class="sc-factors" id="sc-factors" aria-labelledby="sc-factors-title"><header><p class="sc-kicker"><?php echo esc_html( $s['factors_kicker'] ); ?></p><h2 id="sc-factors-title"><?php echo esc_html( $s['factors_title'] ); ?></h2><p><?php echo esc_html( $s['factors_intro'] ); ?></p></header><div class="sc-factor-grid"><?php for ( $i = 1; $i <= 4; $i++ ) : ?><article><span aria-hidden="true"></span><h3><?php echo esc_html( $s[ 'factor_' . $i . '_title' ] ); ?></h3><p><?php echo esc_html( $s[ 'factor_' . $i . '_text' ] ); ?></p></article><?php endfor; ?></div></section>
+	<section class="sc-example" aria-labelledby="sc-example-title"><div><p class="sc-kicker"><?php echo esc_html( $s['example_kicker'] ); ?></p><h2 id="sc-example-title"><?php echo esc_html( $s['example_title'] ); ?></h2><p><?php echo esc_html( $s['example_intro'] ); ?></p></div><dl><div><dt><?php echo esc_html( $s['example_gross_label'] ); ?></dt><dd><?php echo esc_html( $s['example_gross_value'] ); ?></dd></div><div><dt><?php echo esc_html( $s['example_reduction_label'] ); ?></dt><dd><?php echo esc_html( $s['example_reduction_value'] ); ?></dd></div><div><dt><?php echo esc_html( $s['example_net_label'] ); ?></dt><dd><?php echo esc_html( $s['example_net_value'] ); ?></dd></div></dl></section>
+	<aside class="sc-trust"><span aria-hidden="true">✓</span><div><h2><?php echo esc_html( $s['trust_title'] ); ?></h2><p><?php echo esc_html( $s['trust_text'] ); ?></p></div><a href="#sc-calculator"><?php echo esc_html( $s['trust_link_label'] ); ?> <span aria-hidden="true">↑</span></a></aside>
+	<?php
+}
 
 function sc_render_faqs( $s ) {
 	$groups = isset( $s['faqs'] ) && is_array( $s['faqs'] ) ? $s['faqs'] : array(); if ( empty( $groups ) ) return;
@@ -75,11 +97,22 @@ add_action( 'admin_enqueue_scripts', 'sc_admin_assets' );
 
 function sc_render_settings_page() {
 	if ( ! current_user_can( 'manage_options' ) ) return; $s = sc_get_settings();
-	$sections = array( 'Introduction' => array( 'kicker', 'title', 'intro' ), 'Economic damages' => array( 'economic_title', 'medical_label', 'medical_help', 'future_medical_label', 'future_medical_help', 'lost_income_label', 'lost_income_help', 'future_income_label', 'future_income_help', 'property_label', 'property_help', 'other_label', 'other_help' ), 'Claim adjustments' => array( 'adjustments_title', 'multiplier_label', 'multiplier_help', 'fault_label', 'fee_label', 'case_costs_label', 'case_costs_help', 'liens_label', 'liens_help', 'clear_label', 'auto_update_text' ), 'Results' => array( 'net_label', 'economic_result_label', 'non_economic_label', 'gross_label', 'fault_result_label', 'fee_result_label', 'deductions_label', 'disclaimer_title', 'disclaimer_text' ), 'FAQ introduction' => array( 'faq_kicker', 'faq_title', 'faq_intro' ) );
+	$sections = array(
+		'Brand & navigation' => array( 'brand_name', 'brand_descriptor', 'nav_calculator', 'nav_method', 'nav_factors', 'nav_faq' ),
+		'Introduction' => array( 'kicker', 'title', 'intro', 'hero_badge' ),
+		'Economic damages' => array( 'economic_title', 'medical_label', 'medical_help', 'future_medical_label', 'future_medical_help', 'lost_income_label', 'lost_income_help', 'future_income_label', 'future_income_help', 'property_label', 'property_help', 'other_label', 'other_help' ),
+		'Claim adjustments' => array( 'adjustments_title', 'multiplier_label', 'multiplier_help', 'fault_label', 'fee_label', 'case_costs_label', 'case_costs_help', 'liens_label', 'liens_help', 'clear_label', 'auto_update_text' ),
+		'Results' => array( 'net_label', 'economic_result_label', 'non_economic_label', 'gross_label', 'fault_result_label', 'fee_result_label', 'deductions_label', 'disclaimer_title', 'disclaimer_text' ),
+		'Value map' => array( 'method_kicker', 'method_title', 'method_intro', 'method_1_title', 'method_1_text', 'method_2_title', 'method_2_text', 'method_3_title', 'method_3_text' ),
+		'Claim factors' => array( 'factors_kicker', 'factors_title', 'factors_intro', 'factor_1_title', 'factor_1_text', 'factor_2_title', 'factor_2_text', 'factor_3_title', 'factor_3_text', 'factor_4_title', 'factor_4_text' ),
+		'Worked example' => array( 'example_kicker', 'example_title', 'example_intro', 'example_gross_label', 'example_gross_value', 'example_reduction_label', 'example_reduction_value', 'example_net_label', 'example_net_value' ),
+		'Privacy callout' => array( 'trust_title', 'trust_text', 'trust_link_label' ),
+		'FAQ introduction' => array( 'faq_kicker', 'faq_title', 'faq_intro' ),
+	);
 	?>
 	<div class="wrap sc-admin"><h1><?php esc_html_e( 'Settlement Calculator', 'settlement-calculator' ); ?></h1><p><?php esc_html_e( 'Edit every public label and manage the tabbed FAQ content.', 'settlement-calculator' ); ?></p><?php if ( isset( $_GET['updated'] ) ) : ?><div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Settings saved.', 'settlement-calculator' ); ?></p></div><?php endif; ?>
 	<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="sc_save_settings"><?php wp_nonce_field( 'sc_save_settings' ); ?>
-	<?php foreach ( $sections as $heading => $keys ) : ?><section class="sc-admin-card"><h2><?php echo esc_html( $heading ); ?></h2><div class="sc-admin-fields"><?php foreach ( $keys as $key ) : ?><label><span><?php echo esc_html( ucwords( str_replace( '_', ' ', $key ) ) ); ?></span><?php if ( in_array( $key, array( 'intro', 'disclaimer_text', 'faq_intro' ), true ) ) : ?><textarea name="settings[<?php echo esc_attr( $key ); ?>]" rows="3"><?php echo esc_textarea( $s[ $key ] ); ?></textarea><?php else : ?><input type="text" name="settings[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $s[ $key ] ); ?>"><?php endif; ?></label><?php endforeach; ?></div></section><?php endforeach; ?>
+	<?php foreach ( $sections as $heading => $keys ) : ?><section class="sc-admin-card"><h2><?php echo esc_html( $heading ); ?></h2><div class="sc-admin-fields"><?php foreach ( $keys as $key ) : ?><label><span><?php echo esc_html( ucwords( str_replace( '_', ' ', $key ) ) ); ?></span><?php if ( 'intro' === $key || '_text' === substr( $key, -5 ) || '_intro' === substr( $key, -6 ) ) : ?><textarea name="settings[<?php echo esc_attr( $key ); ?>]" rows="3"><?php echo esc_textarea( $s[ $key ] ); ?></textarea><?php else : ?><input type="text" name="settings[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $s[ $key ] ); ?>"><?php endif; ?></label><?php endforeach; ?></div></section><?php endforeach; ?>
 	<section class="sc-admin-card"><div class="sc-admin-heading"><div><h2><?php esc_html_e( 'FAQ tabs', 'settlement-calculator' ); ?></h2><p><?php esc_html_e( 'Each group becomes a tab.', 'settlement-calculator' ); ?></p></div><button class="button" type="button" data-add-group><?php esc_html_e( 'Add FAQ tab', 'settlement-calculator' ); ?></button></div><div data-faq-groups><?php foreach ( $s['faqs'] as $group_i => $group ) sc_admin_faq_group( $group, $group_i ); ?></div></section><?php submit_button( __( 'Save calculator settings', 'settlement-calculator' ) ); ?></form>
 	<template data-group-template><?php sc_admin_faq_group( array( 'label' => '', 'items' => array( array( 'question' => '', 'answer' => '' ) ) ), '__GROUP__' ); ?></template><template data-item-template><?php sc_admin_faq_item( array( 'question' => '', 'answer' => '' ), '__GROUP__', '__ITEM__' ); ?></template></div>
 	<?php

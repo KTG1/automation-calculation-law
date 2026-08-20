@@ -4,7 +4,7 @@ Tags: calculator, settlement, personal injury, legal
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,11 @@ This calculator is a general planning tool and does not provide legal advice.
 3. Visit `/settlement-calculator/`.
 
 == Changelog ==
+
+= 1.2.0 =
+* Added configurable branding and section navigation.
+* Added a value-map methodology section, claim-factor cards, a worked example, and a privacy callout.
+* Expanded the settings editor for every new section.
 
 = 1.1.0 =
 * Added a single-column calculator layout.
