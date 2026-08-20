@@ -1,6 +1,6 @@
 # Settlement Calculator WordPress Plugin
 
-An installable WordPress plugin that creates a published `/settlement-calculator/` page on activation and renders a responsive personal-injury settlement estimator.
+An installable WordPress plugin that creates a published `/settlement-calculator/` page on activation and renders a responsive personal-injury settlement estimator with tabbed FAQs.
 
 ## Installation
 
@@ -14,6 +14,10 @@ You can also render the calculator on another page with:
 ```text
 [settlement_calculator]
 ```
+
+## Customization
+
+Open **Settings → Settlement Calculator** in WordPress to edit every public heading, label, helper line, result term, and disclaimer. The same screen lets administrators add or remove FAQ tabs, questions, and answers.
 
 ## Calculation model
 

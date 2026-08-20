@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive preview of the Settlement Calculator WordPress plugin.">
+  <title>Settlement Calculator — Live Preview</title>
+  <link rel="stylesheet" href="settlement-calculator/assets/css/settlement-calculator.css">
+  <style>
+    html { background: #f5f8fb; }
+    body { margin: 0; }
+    .demo-bar {
+      align-items: center;
+      background: #102a43;
+      color: #dce8f5;
+      display: flex;
+      font: 700 12px/1.4 "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      justify-content: space-between;
+      letter-spacing: .04em;
+      padding: 12px clamp(16px, 4vw, 48px);
+    }
+    .demo-bar span { align-items: center; display: flex; gap: 8px; }
+    .demo-bar span::before { background: #63e6d5; border-radius: 50%; content: ""; height: 8px; width: 8px; }
+    .demo-bar a { color: #fff; text-underline-offset: 3px; }
+    .demo-bar a:focus-visible { outline: 3px solid #63e6d5; outline-offset: 3px; }
+    @media (max-width: 520px) { .demo-bar { align-items: flex-start; flex-direction: column; gap: 6px; } }
+  </style>
+</head>
+<body>
+  <nav class="demo-bar" aria-label="Preview information">
+    <span>Live plugin preview</span>
+    <a href="https://github.com/KTG1/automation-calculation-law">View repository</a>
+  </nav>
+
+  <main>
+    <section class="sc-shell" aria-labelledby="sc-title">
+      <header class="sc-intro">
+        <p class="sc-kicker">Claim planning tool</p>
+        <h1 id="sc-title">Estimate what your settlement could leave you.</h1>
+        <p>Build a clear estimate from damages to potential take-home amount. Your entries stay in this browser.</p>
+      </header>
+
+      <div class="sc-layout">
+        <form class="sc-form" data-sc-form novalidate>
+          <fieldset class="sc-section">
+            <legend><span>1</span>Economic damages</legend>
+            <div class="sc-grid">
+              <label class="sc-field" for="sc-medical">
+                <span>Medical expenses</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-medical" name="medical" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Past bills and treatment</small>
+              </label>
+              <label class="sc-field" for="sc-future-medical">
+                <span>Future medical costs</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-future-medical" name="future-medical" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Expected care and rehabilitation</small>
+              </label>
+              <label class="sc-field" for="sc-lost-income">
+                <span>Lost income</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-lost-income" name="lost-income" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Wages already missed</small>
+              </label>
+              <label class="sc-field" for="sc-future-income">
+                <span>Future lost earnings</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-future-income" name="future-income" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Reduced earning capacity</small>
+              </label>
+              <label class="sc-field" for="sc-property">
+                <span>Property damage</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-property" name="property" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Repair or replacement costs</small>
+              </label>
+              <label class="sc-field" for="sc-other">
+                <span>Other damages</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-other" name="other" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Travel and out-of-pocket costs</small>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="sc-section">
+            <legend><span>2</span>Claim adjustments</legend>
+            <div class="sc-grid">
+              <label class="sc-field sc-field--wide" for="sc-multiplier">
+                <span class="sc-label-row"><span>Pain &amp; suffering multiplier</span><output for="sc-multiplier" data-sc-multiplier-output>1.5×</output></span>
+                <input id="sc-multiplier" name="multiplier" type="range" min="1" max="5" step="0.1" value="1.5">
+                <small>Applied to medical expenses; 1× is modest and 5× is severe.</small>
+              </label>
+              <label class="sc-field" for="sc-fault">
+                <span>Your share of fault</span>
+                <span class="sc-input-wrap sc-input-wrap--suffix"><input id="sc-fault" name="fault" type="number" min="0" max="100" step="0.1" value="0" inputmode="decimal"><span aria-hidden="true">%</span></span>
+              </label>
+              <label class="sc-field" for="sc-fee">
+                <span>Attorney fee</span>
+                <span class="sc-input-wrap sc-input-wrap--suffix"><input id="sc-fee" name="fee" type="number" min="0" max="100" step="0.1" value="33.3" inputmode="decimal"><span aria-hidden="true">%</span></span>
+              </label>
+              <label class="sc-field" for="sc-case-costs">
+                <span>Case costs</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-case-costs" name="case-costs" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Filing, experts, records</small>
+              </label>
+              <label class="sc-field" for="sc-liens">
+                <span>Medical liens</span>
+                <span class="sc-input-wrap"><span aria-hidden="true">$</span><input id="sc-liens" name="liens" type="number" min="0" step="100" inputmode="decimal" placeholder="0"></span>
+                <small>Amounts repaid from settlement</small>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="sc-actions">
+            <button class="sc-reset" type="reset">Clear all</button>
+            <p>Values update automatically.</p>
+          </div>
+        </form>
+
+        <aside class="sc-result" aria-labelledby="sc-result-title" aria-live="polite">
+          <div class="sc-result-top">
+            <p>Estimated take-home</p>
+            <h2 id="sc-result-title" data-sc-net>$0</h2>
+            <span data-sc-range>$0 – $0</span>
+          </div>
+          <dl class="sc-breakdown">
+            <div><dt>Economic damages</dt><dd data-sc-economic>$0</dd></div>
+            <div><dt>Pain &amp; suffering</dt><dd data-sc-non-economic>$0</dd></div>
+            <div><dt>Estimated claim value</dt><dd data-sc-gross>$0</dd></div>
+            <div><dt>Fault reduction</dt><dd data-sc-fault>−$0</dd></div>
+            <div><dt>Attorney fee</dt><dd data-sc-fee>−$0</dd></div>
+            <div><dt>Costs &amp; liens</dt><dd data-sc-deductions>−$0</dd></div>
+          </dl>
+          <div class="sc-note">
+            <strong>A planning estimate, not a promise.</strong>
+            <p>Laws, insurance limits, evidence, negotiations, taxes, and case-specific facts can materially change a settlement. This tool is not legal advice.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="sc-faq" aria-labelledby="sc-faq-title" data-sc-faq>
+      <header>
+        <p class="sc-kicker">Common questions</p>
+        <h2 id="sc-faq-title">Understand the estimate.</h2>
+        <p>Explore how the calculator works, what may affect a claim, and what the estimate leaves out.</p>
+      </header>
+      <div class="sc-faq-tabs" role="tablist" aria-label="Understand the estimate">
+        <button type="button" role="tab" id="sc-faq-tab-0" aria-controls="sc-faq-panel-0" aria-selected="true" tabindex="0">Calculation basics</button>
+        <button type="button" role="tab" id="sc-faq-tab-1" aria-controls="sc-faq-panel-1" aria-selected="false" tabindex="-1">Costs &amp; fees</button>
+        <button type="button" role="tab" id="sc-faq-tab-2" aria-controls="sc-faq-panel-2" aria-selected="false" tabindex="-1">Legal context</button>
+      </div>
+      <div class="sc-faq-panel" role="tabpanel" id="sc-faq-panel-0" aria-labelledby="sc-faq-tab-0">
+        <details><summary>How is the estimated claim value calculated?<span aria-hidden="true"></span></summary><div><p>The calculator adds economic damages to an estimate for pain and suffering. The pain-and-suffering estimate applies your selected multiplier to past and future medical expenses.</p></div></details>
+        <details><summary>What does the likely range mean?<span aria-hidden="true"></span></summary><div><p>The range is 15% below and above the estimated take-home amount. It illustrates uncertainty and is not a prediction or guarantee.</p></div></details>
+      </div>
+      <div class="sc-faq-panel" role="tabpanel" id="sc-faq-panel-1" aria-labelledby="sc-faq-tab-1" hidden>
+        <details><summary>When is the attorney fee deducted?<span aria-hidden="true"></span></summary><div><p>The calculator applies the entered attorney fee percentage after reducing the gross estimate for your share of fault.</p></div></details>
+        <details><summary>What should I include as case costs?<span aria-hidden="true"></span></summary><div><p>Examples can include filing fees, medical records, depositions, investigators, and expert witnesses. Fee arrangements vary.</p></div></details>
+      </div>
+      <div class="sc-faq-panel" role="tabpanel" id="sc-faq-panel-2" aria-labelledby="sc-faq-tab-2" hidden>
+        <details><summary>Does this calculator provide legal advice?<span aria-hidden="true"></span></summary><div><p>No. It is a general planning tool. A qualified attorney can assess deadlines, evidence, insurance coverage, local law, and the facts of a specific matter.</p></div></details>
+        <details><summary>Can comparative fault eliminate recovery?<span aria-hidden="true"></span></summary><div><p>Rules differ by jurisdiction. Some systems reduce recovery by a percentage, while others can bar recovery at a threshold. The calculator only models a percentage reduction.</p></div></details>
+      </div>
+    </section>
+  </main>
+
+  <script src="settlement-calculator/assets/js/settlement-calculator.js"></script>
+</body>
+</html>
