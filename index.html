@@ -33,14 +33,20 @@
   </nav>
 
   <main>
-    <section class="sc-shell" aria-labelledby="sc-title">
+    <div class="sc-shell">
+    <nav class="sc-brandbar" aria-label="Calculator navigation">
+      <a class="sc-brand" href="#sc-title"><span class="sc-brand-mark" aria-hidden="true">C</span><span><strong>Claimline</strong><small>Settlement planning studio</small></span></a>
+      <div><a href="#sc-calculator">Calculator</a><a href="#sc-method">How it works</a><a href="#sc-factors">Claim factors</a><a href="#sc-faq-title">FAQ</a></div>
+    </nav>
+    <section aria-labelledby="sc-title">
       <header class="sc-intro">
         <p class="sc-kicker">Claim planning tool</p>
         <h1 id="sc-title">Estimate what your settlement could leave you.</h1>
         <p>Build a clear estimate from damages to potential take-home amount. Your entries stay in this browser.</p>
+        <span class="sc-privacy-badge"><i aria-hidden="true"></i>Private by design · No data saved</span>
       </header>
 
-      <div class="sc-layout">
+      <div class="sc-layout" id="sc-calculator">
         <form class="sc-form" data-sc-form novalidate>
           <fieldset class="sc-section">
             <legend><span>1</span>Economic damages</legend>
@@ -135,6 +141,28 @@
       </div>
     </section>
 
+    <section class="sc-method" id="sc-method" aria-labelledby="sc-method-title">
+      <header><p class="sc-kicker">The value map</p><h2 id="sc-method-title">From documented loss to a working estimate.</h2><p>A settlement is not one number pulled from thin air. This calculator follows three connected layers so you can see where value enters—and where deductions leave.</p></header>
+      <div class="sc-value-map">
+        <article><span>01</span><h3>Document the loss</h3><p>Start with bills, missed income, damaged property, future care, and other costs you can support with records.</p></article>
+        <article><span>02</span><h3>Model human impact</h3><p>Use the multiplier to explore how injury severity, recovery time, and daily disruption may affect non-economic damages.</p></article>
+        <article><span>03</span><h3>Account for recovery</h3><p>Reduce the working value for comparative fault, legal fees, case expenses, and medical liens.</p></article>
+      </div>
+    </section>
+
+    <section class="sc-factors" id="sc-factors" aria-labelledby="sc-factors-title">
+      <header><p class="sc-kicker">What moves a claim</p><h2 id="sc-factors-title">The number is shaped by the story behind it.</h2><p>Two claims with similar bills can resolve very differently. These are common forces behind that difference.</p></header>
+      <div class="sc-factor-grid">
+        <article><span aria-hidden="true"></span><h3>Evidence quality</h3><p>Medical records, wage documentation, photographs, witnesses, and consistent treatment can make losses easier to establish.</p></article>
+        <article><span aria-hidden="true"></span><h3>Coverage available</h3><p>Policy limits and the defendant’s ability to pay may cap practical recovery regardless of calculated damages.</p></article>
+        <article><span aria-hidden="true"></span><h3>Recovery timeline</h3><p>Longer treatment, permanent limitations, and future medical needs can change both economic and non-economic damages.</p></article>
+        <article><span aria-hidden="true"></span><h3>Disputed responsibility</h3><p>Conflicting accounts, shared fault, and local comparative-negligence rules can materially reduce or bar recovery.</p></article>
+      </div>
+    </section>
+
+    <section class="sc-example" aria-labelledby="sc-example-title"><div><p class="sc-kicker">Worked example</p><h2 id="sc-example-title">See how the layers change take-home value.</h2><p>This simplified illustration shows why a headline settlement and the amount a claimant receives are not the same.</p></div><dl><div><dt>Working claim value</dt><dd>$75,000</dd></div><div><dt>Fault, fees, costs &amp; liens</dt><dd>−$31,250</dd></div><div><dt>Illustrative take-home</dt><dd>$43,750</dd></div></dl></section>
+    <aside class="sc-trust"><span aria-hidden="true">✓</span><div><h2>Your figures stay with you.</h2><p>The calculator runs entirely in your browser. It does not submit, store, or transmit the numbers you enter.</p></div><a href="#sc-calculator">Return to calculator <span aria-hidden="true">↑</span></a></aside>
+
     <section class="sc-faq" aria-labelledby="sc-faq-title" data-sc-faq>
       <header>
         <p class="sc-kicker">Common questions</p>
@@ -159,6 +187,7 @@
         <details><summary>Can comparative fault eliminate recovery?<span aria-hidden="true"></span></summary><div><p>Rules differ by jurisdiction. Some systems reduce recovery by a percentage, while others can bar recovery at a threshold. The calculator only models a percentage reduction.</p></div></details>
       </div>
     </section>
+    </div>
   </main>
 
   <script src="settlement-calculator/assets/js/settlement-calculator.js"></script>

@@ -19,6 +19,8 @@ You can also render the calculator on another page with:
 
 Open **Settings → Settlement Calculator** in WordPress to edit every public heading, label, helper line, result term, and disclaimer. The same screen lets administrators add or remove FAQ tabs, questions, and answers.
 
+Version 1.2.0 also adds editable branding, navigation labels, a three-stage value map, claim-factor explanations, a worked example, and a privacy callout.
+
 ## Calculation model
 
 - Economic damages are the sum of medical, income, property, and other losses.
